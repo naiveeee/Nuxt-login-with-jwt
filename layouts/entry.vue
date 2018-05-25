@@ -104,12 +104,12 @@ export default {
     }
     .login-container-wrap{
       position: absolute;
-      top: 50%;
+      top: 10%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%);
       max-width: 600px;
       margin: 0 auto;
-      padding: 80px 0;
+      padding: 10px 0;
       height: 400px;
       text-align: center;
     }

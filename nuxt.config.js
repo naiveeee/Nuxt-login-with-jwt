@@ -20,7 +20,7 @@ module.exports = {
   /*
   ** Plugins
   */
-  plugins: ['~plugins/vee-validate.js'],
+  plugins: [],
   /*
   ** Customize the progress-bar color
   */

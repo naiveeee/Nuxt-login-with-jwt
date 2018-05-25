@@ -1,10 +1,18 @@
 import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
-
-async function start () {
+import KoaStatic from 'koa-static'
+import bodyParser from 'koa-bodyparser'
+import api from '../API'
+async function start() {
   const app = new Koa()
   const host = process.env.HOST || '127.0.0.1'
   const port = process.env.PORT || 3000
+  //  bodyParser: 解析post请求的主体内容 放在ctx.request.body中
+  app.use(bodyParser())
+  //  KoaStatic: 解析静态文件
+  app.use(KoaStatic('.'))
+  //  挂载api
+  app.use(api.routes())
 
   // Import and Set Nuxt.js options
   let config = require('../nuxt.config.js')

@@ -1,19 +1,27 @@
 <template>
     <div class="entry-input-wrap">
         <div class="entry-input-body">
-            <input :name="name" :class="['entry-input' ,!!errors.first(name) ? 'error' : null]" v-validate="validate" :type="type" :placeholder="placeholder"/>
+            <input @input="inputHandler" @focus="focusHandler" :value="value" :class="['entry-input' ,!validateObject ? null : validateObject.flag ? 'success' : 'error']" :type="type" :placeholder="placeholder"/>
         </div>
-        <div class="entry-input-prompt">
-            {{errors.first(name)}}
+        <div class="entry-input-options">
+            
+        </div>
+        <div :class="['entry-input-prompt',!validateObject ? null : validateObject.flag ? 'success' : 'error']">
+            {{!validateObject ? null : validateObject.message}}
         </div>
     </div>
 </template>
 <script>
 export default {
+  // 可以自己定义 v-model 具体用法
+  model: {
+    prop: 'value',
+    event: 'input'
+  },
   props: {
     validate: {
-      type: String,
-      default: 'required'
+      type: Function,
+      default: () => ''
     },
     type: {
       type: String,
@@ -23,17 +31,30 @@ export default {
       type: String,
       default: ''
     },
-    name: {
+    value: {
       type: String,
       required: true
     }
   },
   data() {
     return {
-      promptText: '请输入用户名'
+      validateObject: null
     }
   },
   methods: {
+    validateAction(value) {
+      this.validateObject = this.validate(value)
+    },
+    focusHandler() {
+      this.validateAction(event.target.value)
+    },
+    inputHandler() {
+      //  向父组件传值
+      let value = event.target.value
+      this.$emit('input', value)
+      //  校验
+      this.validateAction(event.target.value)
+    }
   }
 }
 </script>
@@ -45,7 +66,7 @@ export default {
     position: relative;
     text-align: center;
     .entry-input {
-      width: 60%;
+      width: 11em;
       height: 1.5em;
       outline: none;
       border-radius: 0.2em;
@@ -60,6 +81,9 @@ export default {
     .entry-input.error{
       border: 1px solid orange;
     }
+    .entry-input.success{
+      border: 1px solid greenyellow;
+    }
     .entry-input::-webkit-input-placeholder {
         color: white;
         font-weight: 200;
@@ -70,7 +94,7 @@ export default {
     }
     .entry-input:focus {
       background-color: white;
-      width: 75%;
+      width: 15em;
       color: #53e3a6;
     }
   }
@@ -80,7 +104,12 @@ export default {
     transform: translateX(-50%);
     white-space: nowrap;
     top: 2.8em;
+  }
+  .entry-input-prompt.error{
     color: red;
+  }
+  .entry-input-prompt.success{
+    color: greenyellow;
   }
 }
 </style>
